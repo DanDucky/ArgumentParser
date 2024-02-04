@@ -102,6 +102,11 @@ const char* prefixes[NUMBER_OF_PREFIXES] = {CLI_PREFIX};
             return isSet;
         }
 
+        void set(UnderlyingType input) {
+            isSet = true;
+            t = input;
+        }
+
         operator UnderlyingType() const {
             if (!isSet) throw std::bad_optional_access();
             return t;
