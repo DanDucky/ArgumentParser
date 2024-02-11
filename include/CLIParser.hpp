@@ -43,14 +43,14 @@ const char* prefixes[NUMBER_OF_PREFIXES] = {CLI_PREFIX};
 
     template <typename Type>
     concept OptType = requires(Type t) {
-        {true};
+        t.isOpt();
     };
 
 #define CLI_OPTION_REQUIRED 0b00000001
 #define CLI_OPTION_PROMPT 0b00000011
 #define CLI_OPTION_NULL 0
 
-    template <typename UnderlyingType, uint8_t OPTION>
+    template <typename UnderlyingType, uint8_t OPTION=CLI_OPTION_NULL>
     class Opt {
     public:
         template<typename... Ts>
@@ -101,6 +101,9 @@ const char* prefixes[NUMBER_OF_PREFIXES] = {CLI_PREFIX};
         [[nodiscard]] bool hasValue() const {
             return isSet;
         }
+        [[nodiscard]] bool empty() const {
+            return !isSet;
+        }
 
         void set(UnderlyingType input) {
             isSet = true;
@@ -116,6 +119,9 @@ const char* prefixes[NUMBER_OF_PREFIXES] = {CLI_PREFIX};
         operator UnderlyingType() const {
             if (!isSet) throw std::bad_optional_access();
             return t;
+        }
+        constexpr bool isOpt() {
+            return true;
         }
     private:
 //        template<OptType... Opts>
